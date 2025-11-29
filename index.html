@@ -24,11 +24,11 @@
               display: ['Orbitron', 'sans-serif'],
             },
             colors: {
-              background: '#020617',
+              background: '#020617', // Slate 950
               panel: '#0B1120',
-              neon: '#0AE4FF',
-              primary: '#0A84FF',
-              accent: '#8B5CF6',
+              neon: '#0AE4FF', // Cyan
+              primary: '#0A84FF', // Blue
+              accent: '#8B5CF6', // Violet
               danger: '#FF0A46',
               success: '#00F0FF',
               muted: '#64748b',
@@ -100,6 +100,7 @@
       "lucide-react": "https://aistudiocdn.com/lucide-react@^0.554.0"
     }
   }
+
   </script>
 </head>
   <body>
@@ -108,6 +109,7 @@
     <script type="text/babel" data-type="module">
       import React, { useState, useEffect, useRef } from 'react';
       import ReactDOM from 'react-dom/client';
+      import { GoogleGenAI, Type } from '@google/genai';
       import { 
         ShieldAlert, ShieldCheck, Loader2, Menu, X, Fingerprint, 
         Shield, ChevronRight, ArrowRight, CheckCircle2, Lock, 
@@ -115,6 +117,7 @@
       } from 'lucide-react';
 
       // --- DATA ---
+
       export const PRICING_PLANS = [
         {
           id: 'individual',
@@ -198,7 +201,8 @@
 
       export const NAV_ITEMS = ['home', 'about', 'insights', 'pricing', 'contact'];
 
-      // --- ONLY THIS handleScan FUNCTION IS MODIFIED (FAKE DEMO) ---
+      // --- COMPONENTS ---
+
       const Scanner = () => {
         const [input, setInput] = useState('');
         const [loading, setLoading] = useState(false);
@@ -206,11 +210,12 @@
         const [error, setError] = useState(null);
         const [terminalLines, setTerminalLines] = useState([]);
 
+        // Simulate terminal logging
         const addLog = (text) => {
           setTerminalLines(prev => [...prev.slice(-4), `> ${text}`]);
         };
 
-        const handleScan = async () => {
+               const handleScan = async () => {
           if (!input.trim()) return;
 
           setLoading(true);
@@ -218,49 +223,36 @@
           setResult(null);
           setTerminalLines([
             '> Initializing untrace_engine_v2.5...',
-            '> Establishing secure connection...',
-            '> Scanning 150+ Indian data broker sites...'
+            '> Establishing secure connection...'
           ]);
 
-          await new Promise(r => setTimeout(r, 1200));
-          addLog('Found 47 partial matches on public directories');
-          await new Promise(r => setTimeout(r, 1000));
-          addLog('Aadhaar linkage detected on 18 broker sites');
-          await new Promise(r => setTimeout(r, 900));
-          addLog('Phone number exposed on Truecaller & 14 apps');
-          await new Promise(r => setTimeout(r, 800));
-          addLog('Generating risk profile...');
+          try {
+            addLog('Transmitting payload to quantum core...');
+            await new Promise(r => setTimeout(r, 800));
+            addLog('Initiating breach simulation...');
 
-          const fakeResult = Math.random() > 0.3 ? {
-            riskLevel: "Critical",
-            score: 19,
-            summary: "Your phone number, email & Aadhaar are publicly exposed on 47+ Indian data broker sites including Truecaller, JustDial, loan apps and people-search platforms.",
-            recommendations: [
-              "Remove from Truecaller & GetContact (Priority 1)",
-              "Delete profiles from 27 people-search databases",
-              "Block Aadhaar-PAN linkage on 18 broker sites",
-              "Suppress photos from public Facebook & Instagram searches"
-            ]
-          } : {
-            riskLevel: "High",
-            score: 43,
-            summary: "High exposure detected. Your data appears on 23+ sites including loan apps and public directories. Risk of targeted fraud is elevated.",
-            recommendations: [
-              "Remove from 15+ Indian data broker sites",
-              "Opt-out from Truecaller permanently",
-              "Suppress old social media profiles",
-              "Enable weekly monitoring"
-            ]
-          };
+            const response = await fetch('/api/scan', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ input: input.trim() })
+            });
 
-          setTimeout(() => {
-            setResult(fakeResult);
-            addLog('REPORT RENDERED — EXPOSURE CONFIRMED');
+            if (!response.ok) throw new Error('Server error');
+
+            const data = await response.json();
+            setResult(data);
+            addLog('Analysis complete. Rendering report.');
+
+          } catch (err) {
+            setError("Connection failed. System offline.");
+            addLog('ERROR: Connection terminated.');
+            console.error(err);
+          } finally {
             setLoading(false);
-          }, 1000);
+          }
         };
-        // --- END OF MODIFIED PART ---
 
+        
         return (
           <div className="w-full max-w-4xl mx-auto relative group">
             {/* Holographic Border */}
@@ -366,7 +358,6 @@
         );
       };
 
-      // Rest of your App component (100% unchanged)
       const App = () => {
         const [activeSection, setActiveSection] = useState('home');
         const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -430,7 +421,7 @@
                   ))}
                 </nav>
 
-               <a href="REGENRATE_intake.html" class="hidden md:flex items-center gap-2 bg-transparent border border-neon/50 text-neon px-6 py-2.5 rounded-xl font-bold font-display uppercase tracking-widest hover:bg-neon hover:text-black transition-all hover:shadow-[0_0_30px_rgba(10,228,255,0.4)]">
+               <a href="c:\Users\Ankita\Downloads\Untrace.me — Secure Intake Form.html" class="hidden md:flex items-center gap-2 bg-transparent border border-neon/50 text-neon px-6 py-2.5 rounded-xl font-bold font-display uppercase tracking-widest hover:bg-neon hover:text-black transition-all hover:shadow-[0_0_30px_rgba(10,228,255,0.4)]">
                   Start Scan
                </a>
 
@@ -559,13 +550,208 @@
                       </div>
                       <Scanner />
                     </div>
+                    
+                    {/* Stats */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-8 py-12 border-t border-white/5 bg-white/[0.02] rounded-3xl">
+                       {[
+                         { label: 'Data Points Wiped', value: '1.2M+' },
+                         { label: 'Takedown Rate', value: '99.8%' },
+                         { label: 'Protected Users', value: '50k+' },
+                         { label: 'Response Time', value: '< 24h' }
+                       ].map((stat, i) => (
+                         <div key={i} className="text-center group">
+                           <h4 className="text-4xl font-display font-bold text-white mb-2 group-hover:text-neon transition-colors">{stat.value}</h4>
+                           <p className="text-muted text-xs font-mono uppercase tracking-widest">{stat.label}</p>
+                         </div>
+                       ))}
+                    </div>
                   </div>
                 )}
 
-                {/* Your other sections (about, insights, pricing, contact) remain 100% unchanged */}
-                {/* ... exactly as you wrote them ... */}
+                {/* ABOUT */}
+                {(activeSection === 'about') && (
+                  <div className="animate-fadeInUp max-w-5xl mx-auto space-y-16">
+                    <div className="grid md:grid-cols-2 gap-16 items-center">
+                      <div>
+                         <h2 className="text-neon font-mono font-bold tracking-widest text-sm uppercase mb-4">/// MISSION BRIEF</h2>
+                         <h3 className="text-3xl md:text-4xl font-display font-bold text-white mb-8">
+                           Find. Verify. <span className="text-danger">Delete.</span>
+                         </h3>
+                         <div className="space-y-6 text-gray-300 leading-relaxed font-light">
+                           <p>
+                             Untrace.me is an AI-first remediation service. We don't just tell you you're exposed; we fix it.
+                           </p>
+                           <p>
+                             Using advanced OSINT (Open Source Intelligence) and ML models, we scour the surface and deep web. When we find your data, our human verification team steps in to initiate legal takedowns.
+                           </p>
+                           
+                           <div className="bg-white/5 p-6 rounded-2xl border border-white/10 mt-8">
+                             <h4 className="text-white font-bold mb-4 flex items-center gap-2"><Globe className="w-4 h-4 text-neon"/> Coverage Matrix</h4>
+                             <ul className="space-y-3 text-sm">
+                               <li className="flex gap-3">
+                                 <span className="w-1.5 h-1.5 rounded-full bg-accent mt-2"></span>
+                                 <span><strong>Individuals:</strong> Remove credentials, IDs, photos, and reduce fraud risk.</span>
+                               </li>
+                               <li className="flex gap-3">
+                                 <span className="w-1.5 h-1.5 rounded-full bg-accent mt-2"></span>
+                                 <span><strong>Businesses:</strong> Continuous employee monitoring & DPDP compliance.</span>
+                               </li>
+                             </ul>
+                           </div>
+                         </div>
+                      </div>
+                      <div className="relative">
+                         <div className="absolute inset-0 bg-neon/20 blur-[80px] rounded-full"></div>
+                         <img 
+                          src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=600" 
+                          className="relative rounded-2xl border border-white/10 shadow-2xl opacity-90 grayscale hover:grayscale-0 transition-all duration-500" 
+                          alt="Team working"
+                         />
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* INSIGHTS */}
+                {(activeSection === 'insights') && (
+                  <div className="animate-fadeInUp">
+                     <div className="text-center mb-16 space-y-4">
+                      <h2 className="text-neon font-mono font-bold tracking-widest text-sm uppercase">/// INTEL FEED</h2>
+                      <h3 className="text-3xl font-display font-bold text-white">LATEST SECURITY PROTOCOLS</h3>
+                    </div>
+
+                    <div className="grid md:grid-cols-3 gap-8">
+                      {BLOG_POSTS.map((post) => (
+                        <div key={post.id} className="group bg-panel rounded-2xl overflow-hidden border border-white/5 hover:border-neon/50 transition-all duration-300 hover:-translate-y-2">
+                          <div className="h-48 overflow-hidden relative">
+                            <img src=" "/>
+                            <div className="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-colors"></div>
+                          </div>
+                          <div className="p-6">
+                            <span className="text-xs font-mono font-bold text-accent uppercase tracking-wider">{post.category}</span>
+                            <h4 className="text-lg font-bold text-white mt-2 mb-4 group-hover:text-neon transition-colors">{post.title}</h4>
+                            <button className="text-sm text-muted group-hover:text-white flex items-center gap-2 uppercase font-bold tracking-wide">
+                              Access File <ChevronRight className="w-4 h-4" />
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* PRICING */}
+                {(activeSection === 'pricing') && (
+                  <div className="animate-fadeInUp">
+                    <div className="text-center mb-16 space-y-4">
+                      <h2 className="text-neon font-mono font-bold tracking-widest text-sm uppercase">/// SUBSCRIPTION MODULES</h2>
+                      <h3 className="text-3xl font-display font-bold text-white">SELECT PROTECTION LEVEL</h3>
+                    </div>
+
+                    <div className="grid md:grid-cols-3 gap-8">
+                      {PRICING_PLANS.map((plan, index) => (
+                        <div key={plan.id} className={`
+                          relative bg-panel/50 backdrop-blur-sm rounded-3xl p-1 border flex flex-col transition-all duration-500 hover:transform hover:scale-[1.02]
+                          ${index === 1 ? 'border-neon shadow-[0_0_40px_rgba(10,228,255,0.15)] z-10' : 'border-white/10 hover:border-white/30'}
+                        `}>
+                           <div className="bg-[#050b14] h-full rounded-[20px] p-6 flex flex-col overflow-hidden relative">
+                             {/* Glossy effect */}
+                             <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-[60px] -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
+
+                             {index === 1 && (
+                               <div className="absolute top-4 right-4 bg-neon text-black text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wide animate-pulse">
+                                 Recommended
+                               </div>
+                             )}
+                             
+                             <div className="mb-6 relative z-10">
+                               <h3 className="text-sm font-mono text-muted uppercase tracking-widest mb-2">{plan.name}</h3>
+                               <div className="text-4xl font-display font-bold text-white mb-1">{plan.price}</div>
+                               <div className="text-xs text-accent font-semibold">{plan.audience}</div>
+                             </div>
+
+                             <div className="space-y-4 mb-8 flex-1 relative z-10">
+                               {plan.features.map((feature, i) => (
+                                 <div key={i} className="flex gap-3 text-sm text-gray-300">
+                                   <CheckCircle2 className="w-4 h-4 text-neon shrink-0 mt-0.5" />
+                                   {feature}
+                                 </div>
+                               ))}
+                             </div>
+
+                             <div className="bg-white/5 rounded-xl p-4 mb-6 border border-white/5">
+                               <ul className="space-y-2">
+                                  {plan.tagline.map((line, i) => (
+                                    <li key={i} className="text-[11px] text-gray-400 font-mono flex items-center gap-2">
+                                      <span className="w-1 h-1 bg-accent rounded-full"></span>
+                                      {line}
+                                    </li>
+                                  ))}
+                               </ul>
+                             </div>
+
+                             <button className={`
+                               w-full py-4 rounded-xl font-bold font-display uppercase tracking-widest transition-all relative overflow-hidden group
+                               ${index === 1 ? 'bg-neon text-black' : 'bg-white/10 text-white hover:bg-white/20'}
+                             `}>
+                               <span className="relative z-10">Deploy Shield</span>
+                               {index === 1 && <div className="absolute inset-0 bg-white/30 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>}
+                             </button>
+                           </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* CONTACT */}
+                {(activeSection === 'contact') && (
+                  <div className="animate-fadeInUp max-w-2xl mx-auto">
+                     <div className="bg-panel/80 backdrop-blur-md rounded-3xl p-10 border border-white/10 text-center shadow-2xl relative overflow-hidden">
+                       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-neon to-transparent"></div>
+                       
+                       <h2 className="text-3xl font-display font-bold text-white mb-10">SECURE COMMS LINK</h2>
+                       
+                       <div className="space-y-8 relative z-10">
+                         <div className="group bg-black/30 p-4 rounded-xl border border-white/5 hover:border-neon/30 transition-colors">
+                           <p className="text-neon font-mono text-xs uppercase tracking-wider mb-2">Emergency Hotline</p>
+                           <p className="text-xl md:text-2xl text-white font-display font-bold hover:text-neon transition-colors">
+                             +91 81778 17988 <br/> 
+                             <span className="text-lg opacity-60">+91 97663 68017</span>
+                           </p>
+                         </div>
+
+                         <div className="group bg-black/30 p-4 rounded-xl border border-white/5 hover:border-neon/30 transition-colors">
+                           <p className="text-neon font-mono text-xs uppercase tracking-wider mb-2">Encrypted Mail</p>
+                           <p className="text-xl text-white font-display font-medium">untrace@support.com</p>
+                         </div>
+
+                         <div className="flex justify-center gap-6 mt-8">
+                           {['LinkedIn', 'Instagram', 'Facebook', 'Twitter'].map((social) => (
+                             <span key={social} className="text-xs font-mono text-gray-500 hover:text-neon cursor-pointer transition-colors uppercase tracking-widest">
+                               {social}
+                             </span>
+                           ))}
+                         </div>
+                       </div>
+                     </div>
+                  </div>
+                )}
+              
               </div>
+
             </main>
+
+            {/* FOOTER */}
+            <footer className="border-t border-white/5 bg-[#01040f] py-12 text-center px-4">
+              <div className="flex items-center justify-center gap-2 mb-4">
+                <Shield className="w-5 h-5 text-gray-600" />
+                <span className="text-gray-600 font-display font-bold">UNTRACE.ME</span>
+              </div>
+              <p className="text-muted text-xs font-mono">
+                © {new Date().getFullYear()} ENCRYPTED. SECURED. UNTRACEABLE.
+              </p>
+            </footer>
           </div>
         );
       };
